@@ -2,8 +2,13 @@
 // (program/generator/subject/ISA.md in the kit). One run answers every instance:
 // it reads /input/<id>/program.bin and /input/<id>/input.bin and writes
 // /output/<id>/stdout.bin and /output/<id>/exit.txt for each of them.
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+// CommonJS require (not ESM import): the entry runs as `node main.ts` from a
+// package without "type", so ESM import syntax made Node reparse the file and
+// print a MODULE_TYPELESS_PACKAGE_JSON warning to stderr on every run. With
+// require() only, the file parses as CommonJS directly: no warning, no
+// reparse overhead. Behaviour is identical; only the module loading changes.
+const { mkdirSync, readdirSync, readFileSync, writeFileSync } = require('node:fs');
+const { join } = require('node:path');
 
 // [opcode, immediate bytes, pops, pushes] for every opcode of the ISA.
 const OPS: [number, number, number, number][] = [
